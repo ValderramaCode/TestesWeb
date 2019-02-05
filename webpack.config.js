@@ -1,11 +1,11 @@
-
+const webpack = require('webpack');
 const path = require('path');
 const miniCssExtractPlugin = require('mini-css-extract-plugin');
 const copyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     mode: 'development',
-    entry: path.resolve(__dir, 'src/index.js'),
+    entry: path.resolve(__dirname, 'src/index.js'),
     output:{
         filename: 'app.js',
         path: path.resolve(__dirname, 'build/')
