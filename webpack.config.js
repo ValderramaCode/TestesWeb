@@ -40,7 +40,7 @@ module.exports = {
     },
     plugins:[
         new copyWebpackPlugin([
-            {context: path.resolve(__dirname, 'src/'), from: 'index.html'}  
+            {context: path.resolve(__dirname, 'src/static/pages/'), from: 'index.html'}  
         ]),
         new miniCssExtractPlugin({
             filename: 'estilo.css'
