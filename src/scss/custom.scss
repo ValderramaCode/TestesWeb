@@ -1,0 +1,13 @@
+$tinta_jogada_na_tela: url('../static/imgs/img_01.jpg');
+
+#navegacao{
+    opacity: 0.9;
+}
+
+#apresentacao{
+    height: 100vh;
+    background-image: $tinta_jogada_na_tela;
+    p{
+        color: #f8f9fa;
+    }
+}
