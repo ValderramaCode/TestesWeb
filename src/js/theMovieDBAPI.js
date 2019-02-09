@@ -6,7 +6,7 @@ import $ from 'jquery'
 
     *Instruções: 
  1 - 
-    -> Se for a versão 4 da API, é necessário requisitar um "REQUEST TOKEN". url: 'baseUrl/auth/{REQUEST_TOKEN}'.
+    -> Se for a versão 4 da API, é necessário requisitar um "REQUEST TOKEN". url: 'baseUrl/auth/request_token'. Se trata de um POST!!!
     Além disso, é necessário adicionar o header " 'Authorization': 'Bearer <<token_leitura>>'",
     além do header padrão " 'Content-Type': 'application/json;charset=utf-8' ".
     no corpo, pode-se passar um parâmetro de chave "redirect_to" e chave "URL" como caminho para redirecionamento para o usuário,
@@ -41,7 +41,7 @@ import $ from 'jquery'
 */
 
 // API V4
-const baseURLv4 = 'https://api.themoviesdb.org/4'
+const baseURLv4 = 'https://api.themoviedb.org/4'
 const request_tokenV4 = ''
 const headerKey = 'Authorization'
 const headerValue = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxYWI5YzM4MzViOTA0Zjg4MGFmNzU2MDg2MDg1MTRiYSIsInN1YiI6IjVhY2QwMDU4YzNhMzY4N2U0MDAyZjdjNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.l47tyNlpbf5FRmu2O8fvzCkDIFmhnHxlSjYAbhvMR0I'
@@ -50,7 +50,7 @@ const URLToGet_accessToken = `${baseURLv4}/auth/access_token` // Lembrar de pass
 const access_token = ''
 
 // API V3
-const baseURLv3 = 'https://api.themoviesdb.org/3'
+const baseURLv3 = 'https://api.themoviedb.org/3'
 const request_tokenv3 = ''
 const api_key = '1ab9c3835b904f880af75608608514ba'
 const URL_AUTHENTICATIONv3 = `https://www.themoviedb.org/authenticate/${request_tokenv3}`// URL de redirecionamento, passar como query string, no formato " 'redirect_to': '<<URL>>' ".
@@ -59,6 +59,39 @@ const session_ID = ''
 
 //COMUM
 const redirect_to = '' //Sempre opcional
+
+/////////////// Começando, primeiro com a APIv4... utiizarei metodos diferentes, somente por didática.
+/*
+const reqBodyV4 = JSON.stringify({
+  redirect_to: 'localhost:9000'
+})
+*/
+
+
+const xhr = new XMLHttpRequest()
+
+xhr.withCredentials = true;
+
+xhr.open('POST', `${baseURLv4}/auth/request_token `);
+xhr.setRequestHeader(headerKey, headerValue);
+xhr.setRequestHeader('content-type', 'application/json;charset=utf-8')
+
+function transferenciaCompleta(e){
+  console.log('Transferência Completa. Segue a resposta')
+  console.log(xhr.responseText);
+}
+function transferenciaErro(e){
+  console.log("A transferência falhou")
+  console.log(xhr);
+}
+
+xhr.addEventListener('load', transferenciaCompleta)
+xhr.addEventListener('error', transferenciaErro)
+
+xhr.send();
+
+
+
 
 
 /*

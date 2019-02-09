@@ -4,11 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>My Tests</title>
     <link rel="stylesheet" href="estilo.css">
 </head>
 
 <body>
+    <!-- Pensei em colocar a a position como sticky, porém parece haver um problema de imprecisão, que atrapalha a responsividade.
+    Com o fixed, posso colocar "apresentação" com altura 100vh, e com sticky, teria de ter uma fração de porcentagem.
+    Ao olhar o tamanho em alguns dispositivos, percebe-se que a porcentagem de tela coberta muda, e eu acredito que isso se dê
+    pelo fato dos tamanhos serem calculados com base em pixel, que é uma unidade 'não-real', e deve gerar uma margem de erro.
+    se colocar 100vh, esse problema não ocorre, acredito eu, por se tratar de um valor inteiro, que acaba não fracionando o valor.
+    * Por isso, é acho mais facil criar uma margem-top de 56 pixels, em cada primeiro elemento das paginas.  -->
     <nav id="navegacao" class="navbar bg-dark justify-content-center fixed-top">
         <a href="#" class="nav-link text-light">Consumindo API do theMovieDB</a>
         <a href="#" class="nav-link text-light">Jogo da velha</a>
