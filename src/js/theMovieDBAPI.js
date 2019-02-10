@@ -40,145 +40,173 @@ import $ from 'jquery'
     
 */
 
-// API V4
+// API V4.  Usei uma pequena gambiarra para usar sempre o mesmo request token. Mais a baixo explico o por que.
 const baseURLv4 = 'https://api.themoviedb.org/4'
-const request_tokenV4 = ''
-const headerKey = 'Authorization'
-const headerValue = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxYWI5YzM4MzViOTA0Zjg4MGFmNzU2MDg2MDg1MTRiYSIsInN1YiI6IjVhY2QwMDU4YzNhMzY4N2U0MDAyZjdjNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.l47tyNlpbf5FRmu2O8fvzCkDIFmhnHxlSjYAbhvMR0I'
-const URL_AUTHENTICATIONv4 = `https://www.themoviedb.org/auth/access?request_token=${request_tokenV4}`// URL de redirecionamento, passar no body (se houver).
-const URLToGet_accessToken = `${baseURLv4}/auth/access_token` // Lembrar de passar os Headers, além do request_token no body. 
-const access_token = ''
+let request_tokenV4 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE1NDk3NjcwNzcsInNjb3BlcyI6WyJwZW5kaW5nX3JlcXVlc3RfdG9rZW4iXSwiZXhwIjoxNTQ5NzY3OTc3LCJqdGkiOjExODMzMDksImF1ZCI6IjFhYjljMzgzNWI5MDRmODgwYWY3NTYwODYwODUxNGJhIiwicmVkaXJlY3RfdG8iOm51bGwsInZlcnNpb24iOjF9.GfzqFmMX-sXvwuYTAiG2kCR_fM7_2hAN0iA8jWtNK9U'
+const apiReadAccessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxYWI5YzM4MzViOTA0Zjg4MGFmNzU2MDg2MDg1MTRiYSIsInN1YiI6IjVhY2QwMDU4YzNhMzY4N2U0MDAyZjdjNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.l47tyNlpbf5FRmu2O8fvzCkDIFmhnHxlSjYAbhvMR0I'
+let accessToken_accDetails = {
+  access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE1NDk3NjcyNjAsInN1YiI6IjVhY2QwMDU4YzNhMzY4N2U0MDAyZjdjNCIsImp0aSI6IjExODMzMDkiLCJhdWQiOiIxYWI5YzM4MzViOTA0Zjg4MGFmNzU2MDg2MDg1MTRiYSIsInNjb3BlcyI6WyJhcGlfcmVhZCIsImFwaV93cml0ZSJdLCJ2ZXJzaW9uIjoxfQ.im9W9lvKrVb7qXSuRROdH4nvNw1rCJmYWf2SVg6ioWs',
+  account_id: '5acd0058c3a3687e4002f7c4'
+}
 
 // API V3
 const baseURLv3 = 'https://api.themoviedb.org/3'
-const request_tokenv3 = ''
+let request_tokenv3 
 const api_key = '1ab9c3835b904f880af75608608514ba'
-const URL_AUTHENTICATIONv3 = `https://www.themoviedb.org/authenticate/${request_tokenv3}`// URL de redirecionamento, passar como query string, no formato " 'redirect_to': '<<URL>>' ".
-const URLtoGet_sessionID = `${baseURLv3}/authentication/session/new`// Lembrar de passar a Query String, além do body com o request_token
-const session_ID = ''
+let session_ID 
 
 //COMUM
-const redirect_to = '' //Sempre opcional
+let redirect_to //Sempre opcional
+let account_id = '5acd0058c3a3687e4002f7c4'
 
-/////////////// Começando, primeiro com a APIv4... utiizarei metodos diferentes, somente por didática.
-/*
-const reqBodyV4 = JSON.stringify({
-  redirect_to: 'localhost:9000'
-})
+//////// Começando, primeiro com a APIv4... utiizarei metodos diferentes, somente por didática. Primeiro, sem utilizar promisse.
+
+/* Vale a pena dizer que, ainda é necessário validar o request token.
+  Isso porque tem uma página que deve ser acessada para aceitar o Token gerado. Há um problema em redirecionar ou em abrir em uma nova janela
+  a partir do javascript: A pagina aparece, mas sem que os botões funcionem, principalmente o que deve ser clicado, para aceitar o token.
 */
-
-
-const xhr = new XMLHttpRequest()
-
-xhr.withCredentials = true;
-
-xhr.open('POST', `${baseURLv4}/auth/request_token `);
-xhr.setRequestHeader(headerKey, headerValue);
-xhr.setRequestHeader('content-type', 'application/json;charset=utf-8')
-
-function transferenciaCompleta(e){
-  console.log('Transferência Completa. Segue a resposta')
-  console.log(xhr.responseText);
-}
-function transferenciaErro(e){
-  console.log("A transferência falhou")
-  console.log(xhr);
-}
-
-xhr.addEventListener('load', transferenciaCompleta)
-xhr.addEventListener('error', transferenciaErro)
-
-xhr.send();
-
-
-
-
-
-/*
-{
-    "success": true,
-    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE1NDk1ODIzNDQsInN1YiI6IjVhY2QwMDU4YzNhMzY4N2U0MDAyZjdjNCIsImp0aSI6IjExNzk5ODMiLCJhdWQiOiIxYWI5YzM4MzViOTA0Zjg4MGFmNzU2MDg2MDg1MTRiYSIsInNjb3BlcyI6WyJhcGlfcmVhZCIsImFwaV93cml0ZSJdLCJ2ZXJzaW9uIjoxfQ.Uy2vTy1QcP5eHn-_rjVUICSh7YrAo3LiylVX7DOSGMs",
-    "status_code": 1,
-    "status_message": "Success.",
-    "account_id": "5acd0058c3a3687e4002f7c4"
-  }
-
-
-
-const url_base = 'https://api.themoviedb.org/3'
-const headerKey = 'authorization' 
-const acessToken = 'bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxYWI5YzM4MzViOTA0Zjg4MGFmNzU2MDg2MDg1MTRiYSIsInN1YiI6IjVhY2QwMDU4YzNhMzY4N2U0MDAyZjdjNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.l47tyNlpbf5FRmu2O8fvzCkDIFmhnHxlSjYAbhvMR0I'
-const apiKey = '1ab9c3835b904f880af75608608514ba'
-// 5b8cc7c3e4cad420fccd248c7df7636ed3c1018b request token atual; eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE1NDk1ODIxMTcsInNjb3BlcyI6WyJwZW5kaW5nX3JlcXVlc3RfdG9rZW4iXSwiZXhwIjoxNTQ5NTgzMDE3LCJqdGkiOjExNzk5ODMsImF1ZCI6IjFhYjljMzgzNWI5MDRmODgwYWY3NTYwODYwODUxNGJhIiwicmVkaXJlY3RfdG8iOiJodHRwOlwvXC93d3cudGhlbW92aWVkYi5vcmdcLyIsInZlcnNpb24iOjF9.CovIahcVHpCgbBBdIhOgFq8kZclc3yMf8b8NXDMzLlw session ID
-
-{
-    "avatar": {
-      "gravatar": {
-        "hash": "c4939b9bbffc3ffdc73eef00627bf50e"
-      }
-    },
-    "id": 7852538,
-    "iso_639_1": "pt",
-    "iso_3166_1": "BR",
-    "name": "",
-    "include_adult": false,
-    "username": "lukote159"
-  }
-
-
-
-  
-
-{
-  "page": 1,
-  "results": [
-    {
-      "description": "Lista de alguns dos meus filmes preferidos. Para teste.",
-      "favorite_count": 0,
-      "id": 104770,
-      "item_count": 4,
-      "iso_639_1": "pt",
-      "list_type": "movie",
-      "name": "Filmes Preferidos",
-      "poster_path": null
+function getRequestToken(){
+  return new Promise( (resolve,reject)=>{
+    
+    const data = {
+      metodo: 'POST',
+      url: `${baseURLv4}/auth/request_token`,
+      header1key: 'Authorization',
+      header1value: `Bearer ${apiReadAccessToken}`,
+      header2key: 'Content-type',
+      header2value: 'application/json;charset=utf-8',
+      body:{}
     }
-  ],
-  "total_pages": 1,
-  "total_results": 1
+
+    const xhr = new XMLHttpRequest()
+    
+    xhr.open(data.metodo, data.url)
+    xhr.setRequestHeader(data.header1key, data.header1value)
+    xhr.setRequestHeader(data.header2key, data.header2value)
+
+    xhr.onload = (e)=>{
+      console.log("Requisição bem sucedida. O request token foi gerado, e estará no objeto abaixo:\n")
+      request_tokenV4 = (JSON.parse(xhr.responseText)).request_token
+      console.log(request_tokenV4)
+      resolve(request_tokenV4)
+    }
+
+    xhr.onerror=(e)=>{
+      console.log("Opa, parece que ocorreu algum erro. Abaixo seguem mais detalhes:\n")
+      console.log(xhr.responseText)
+      console.log(xhr)
+      reject(xhr)
+    }
+
+    xhr.send(data.body)
+  })
 }
 
+/* Com esta função irei conseguir tanto o Account_id, quanto o access_token.
+      O "account_id" independe de versão, é uma informação muito util para se guardar. */
 
-const xhr = new XMLHttpRequest()
+function getPass(){
+  if(request_tokenV4 != null){
+    return new Promise( (resolve, reject)=> {
+    const data ={
+      metodo: 'POST',
+      url: `${baseURLv4}/auth/access_token`,
+      header1key: 'authorization',
+      header1value: `bearer ${apiReadAccessToken}`,
+      header2key: 'content-type',
+      header2value: 'application/json;charset=utf-8',
+      body: {
+        request_token: request_tokenV4
+      }
+    }
+    const xhr = new XMLHttpRequest()
 
-xhr.withCredentials = true
+    xhr.open(data.metodo, data.url)
+    xhr.setRequestHeader(data.header1key, data.header1value)
+    xhr.setRequestHeader(data.header2key, data.header2value)
 
-xhr.open('get', `${url_base}/account?`)
+    xhr.onload= (e)=>{
+      console.log("A resposta chegou! Segue logo abaixo as informações da Conta e o access_token:\n")
+      accessToken_accDetails = JSON.parse(xhr.responseText)
+      console.log(accessToken_accDetails)
+      account_id = accessToken_accDetails.account_id
+      resolve(accessToken_accDetails)
+    }
 
-xhr.setRequestHeader(headerKey, acessToken)
+    xhr.onerror= (e)=>{
+      console.log("Que pena amigo... algo deu errado! Segue o objeto para procurar saber o que deu errado...\n")
+      console.log(xhr)
+      reject(xhr)
+    }
+    
+    xhr.send(JSON.stringify(data.body))
 
-xhr.addEventListener('readystatechange', (e)=>{
-        console.log(xhr.responseText);
-})
-
-xhr.send()
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-var data = "{}";
-
-var xhr = new XMLHttpRequest();
-xhr.withCredentials = true;
-
-xhr.addEventListener("readystatechange", function () {
-  if (this.readyState === this.DONE) {
-    console.log(this.responseText);
+    })
+  }else{
+    console.log('Amigo, para prosseguir é necessário conseguir o request token. Essa primeira parte tem de ser na munheca.')
   }
-});
 
-xhr.open("GET", "https://api.themoviedb.org/4/account/1/lists?page=1");
-xhr.setRequestHeader("authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxYWI5YzM4MzViOTA0Zjg4MGFmNzU2MDg2MDg1MTRiYSIsInN1YiI6IjVhY2QwMDU4YzNhMzY4N2U0MDAyZjdjNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.l47tyNlpbf5FRmu2O8fvzCkDIFmhnHxlSjYAbhvMR0I");
+}
 
-xhr.send(data);
+/*Essa função consome a parte de 'Accounts' da API. Especificamente, retorna todas as informações a respeito das listas que tenho criadas
+  Isso, a partir do ID da minha conta */
+function getLists(){
+  return new Promise( (resolve, reject)=>{
+    const data = {
+      metodo: "GET",
+      url: `${baseURLv4}/account/${account_id}/lists`,
+      header1key: 'Authorization',
+      header1value: `Bearer ${apiReadAccessToken}`,
+    }
 
+    const xhr = new XMLHttpRequest()
+    xhr.open(data.metodo, data.url)
+    xhr.setRequestHeader(data.header1key, data.header1value)
+
+    xhr.onload = (e)=>{
+      console.log("Abram alas para minhas listas...\n")
+      const listas = JSON.parse(xhr.responseText)
+      console.log(listas)
+      resolve(listas)
+    }
+
+    xhr.onerror = (e)=>{
+      console.log("Algo deu errado com a requisição das listas...\n")
+      console.log(xhr)
+      reject(xhr)
+    }
+
+    xhr.send()
+
+  })
+}
+
+/* 
+Rodei apenas uma vez, para conseguir o request token. Agora preciso validar na mão e continuar a usar esse mesmo token.
+Vale dizer que, já guarder o token abaixo numa variavel lá em cima.
+A segunda parte, que também faz parte da autenticação, deve ser feita também, apenas uma vez. Porém, as duas alternadas.
 */
+/* getRequestToken()
+  .catch( (res)=>{
+    console.log('ENTROU NO CATCH. ALGO DEU ERRADO:\n')
+    console.log(res)
+  })
+
+  TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE1NDk3NjcwNzcsInNjb3BlcyI6WyJwZW5kaW5nX3JlcXVlc3RfdG9rZW4iXSwiZXhwIjoxNTQ5NzY3OTc3LCJqdGkiOjExODMzMDksImF1ZCI6IjFhYjljMzgzNWI5MDRmODgwYWY3NTYwODYwODUxNGJhIiwicmVkaXJlY3RfdG8iOm51bGwsInZlcnNpb24iOjF9.GfzqFmMX-sXvwuYTAiG2kCR_fM7_2hAN0iA8jWtNK9U
+
+  */ 
+/* 
+
+getPass()
+  .catch( (res)=>{
+    console.log('Algo deu errado!!\n')
+    console.log(res)
+  })
+  */
+
+getLists()
+  .catch( (val)=>{
+    console.log("DEU ERRADO... segue o xhr, para debug...\n")
+    console.log(val)
+  })
+
