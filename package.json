@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/ValderramaCode/TestesWeb#readme",
   "devDependencies": {
+    "autoprefixer": "^9.4.7",
     "bootstrap": "^4.2.1",
     "copy-webpack-plugin": "^4.6.0",
     "css-loader": "^2.1.0",
@@ -28,6 +29,7 @@
     "mini-css-extract-plugin": "^0.5.0",
     "node-sass": "^4.11.0",
     "popper.js": "^1.14.7",
+    "postcss-loader": "^3.0.0",
     "sass-loader": "^7.1.0",
     "webpack": "^4.29.1",
     "webpack-cli": "^3.2.3",

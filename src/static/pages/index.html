@@ -15,19 +15,40 @@
     pelo fato dos tamanhos serem calculados com base em pixel, que é uma unidade 'não-real', e deve gerar uma margem de erro.
     se colocar 100vh, esse problema não ocorre, acredito eu, por se tratar de um valor inteiro, que acaba não fracionando o valor.
     * Por isso, é acho mais facil criar uma margem-top de 56 pixels, em cada primeiro elemento das paginas.  -->
-    <nav id="navegacao" class="navbar bg-dark justify-content-center fixed-top">
-        <a href="#" class="nav-link text-light">Consumindo API do theMovieDB</a>
-        <a href="#" class="nav-link text-light">Jogo da velha</a>
-        <a href="#" class="nav-link text-light">item 3</a>
-        <a href="#" class="nav-link text-light">item 4</a>
-        <a href="#" class="nav-link text-light">item 5</a>
-        <a href="#" class="nav-link text-light">item 6</a>
+    <nav id="navegacao" class="navbar justify-content-around navbar-expand-lg bg-dark fixed-top">
+        <a id="brand" href="#" class="navbar-brand">
+            <i class="fa fa-coffee"></i>Script
+        </a>
+        <button class="navbar-toggler disabled" data-toggle="collapse" data-target="#navbarNav">
+            <i id="menu-btn" class="fa fa-align-center"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav w-100 justify-content-around">
+                <li class="nav-item">
+                    <hr class="bg-light d-lg-none">
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link text-light disabled" wm-url="home.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link text-light" wm-url="theMoviesDB.html">Consumindo API do theMovieDB</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link text-light" wm-url="">Jogo da velha</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link text-light" wm-url="">futuro...</a>
+                </li>
+            </ul>
+        </div>
     </nav>
 
-    <div id="apresentacao" class="jumbotron mb-0 d-flex flex-column align-items-center justify-content-center">
-        <h1 class="display-1 mb-3">Olá, Mundo</h1>
-        <p class="lead mb-0">Estarei demonstrando alguns testes, utilizando ferramentas web.</p>
-    </div>
+    <main>
+        <div id="apresentacao" class="jumbotron mb-0 d-flex flex-column align-items-center justify-content-center">
+            <h1 class="display-1 mb-3">Olá, Mundo</h1>
+            <p class="lead mb-0">Estarei demonstrando alguns testes, utilizando ferramentas web.</p>
+        </div>
+    </main>
     <script src="app.js"></script>
 </body>
 

@@ -1,5 +1,6 @@
 
-import "jquery"
+import 'jquery'
+import 'bootstrap'
 
 import './scss/index.scss'
 

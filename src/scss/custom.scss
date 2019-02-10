@@ -1,5 +1,9 @@
 $tinta_jogada_na_tela: url('../static/imgs/img_01.jpg');
 
+#desloca{
+    margin-top: 56px;
+}
+
 #navegacao{
     opacity: 0.9;
 }
@@ -10,4 +14,12 @@ $tinta_jogada_na_tela: url('../static/imgs/img_01.jpg');
     p{
         color: #f8f9fa;
     }
+}
+
+#brand{
+    color: $cyan;
+}
+
+#menu-btn{
+    color: $light;
 }

@@ -21,7 +21,8 @@ module.exports = {
                 use:[
                     miniCssExtractPlugin.loader,
                     'css-loader',
-                    'sass-loader'
+                    'sass-loader',
+                    'postcss-loader',
                 ]
             },
             {
@@ -40,7 +41,7 @@ module.exports = {
     },
     plugins:[
         new copyWebpackPlugin([
-            {context: path.resolve(__dirname, 'src/static/pages/'), from: 'index.html'}  
+            {from: path.resolve(__dirname, 'src/static/pages/*.html'), to: path.resolve(__dirname, 'build/[name].html')}  
         ]),
         new miniCssExtractPlugin({
             filename: 'estilo.css'
@@ -48,3 +49,5 @@ module.exports = {
     ]
 
 }
+
+//context: path.resolve(__dirname, 'src/static/pages/'), from: 'index.html'

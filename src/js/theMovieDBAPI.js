@@ -203,10 +203,10 @@ getPass()
     console.log(res)
   })
   */
-
+/* 
 getLists()
   .catch( (val)=>{
     console.log("DEU ERRADO... segue o xhr, para debug...\n")
     console.log(val)
   })
-
+ */

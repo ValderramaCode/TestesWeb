@@ -1,1 +1,2 @@
-import './theMovieDBAPI';
+import './callViewModule'
+import './theMovieDBAPI'
