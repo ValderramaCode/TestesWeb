@@ -49,6 +49,8 @@ let accessToken_accDetails = {
   account_id: '5acd0058c3a3687e4002f7c4'
 }
 
+
+
 // API V3
 const baseURLv3 = 'https://api.themoviedb.org/3'
 let request_tokenv3 
@@ -58,6 +60,10 @@ let session_ID
 //COMUM
 let redirect_to //Sempre opcional
 let account_id = '5acd0058c3a3687e4002f7c4'
+let listsInfo
+let configurationInfo
+let listacustomizadaInfo
+
 
 //////// Começando, primeiro com a APIv4... utiizarei metodos diferentes, somente por didática. Primeiro, sem utilizar promisse.
 
@@ -180,7 +186,99 @@ function getLists(){
 
   })
 }
+function capturaInfoDeListas(resposta){ // Como só criei uma lista, vai capturar as informações de uma só.
+  return new Promise( (resolve)=>{
+      const list_InfObject = resposta.results[0];
+      
+      listsInfo = list_InfObject // quando faço isso, é só pra gaurdar globalmente, caso necessite. Porém apenas em ambiente de testes.
+      console.log(`Lá vai novamente a lista...\n`)
+      console.log(list_InfObject)
+      
+      const dados = { // A partir daqui, já que farei algumas requisições, passarei um objeto contento o principal conteudo a cada "resolve"
+        infoListaCustomizada: list_InfObject,
+      }
 
+      resolve(dados)
+
+  })
+}
+function getConfiguration(dados){ // Preciso, para montar alugumas urls e de fato resgatar os elementos e adiciona-los na página.
+  
+  return new Promise( (resolve,reject)=>{
+      const data = {
+        metodo: "GET",
+        url: `${baseURLv3}/configuration?api_key=${api_key}`
+      }
+      const xhr = new XMLHttpRequest()
+
+      xhr.open(data.metodo, data.url)
+
+      xhr.addEventListener('load',(e)=>{
+        console.log("A requisição do configuration deu certinho...\n")
+        const info = JSON.parse(xhr.responseText)
+        console.log(info)
+        configurationInfo = info // Guardando globalmente, para caso necessite em teste. 
+        
+        dados.infoConfiguracoes = info
+        console.log('Este é o objeto de dados que passarei a frente, somente acrescentando-o...\n')
+        console.log(dados)
+        resolve(dados)
+      })
+
+      xhr.addEventListener('error',(e)=>{
+        console.log('Deu um erro na requisição do configuration...\n')
+        console.log(xhr)
+        reject(xhr)
+      })
+
+      xhr.send()
+
+  })
+
+} 
+function getListaCustomizadaByID(dados){
+  return new Promise( (resolve, reject)=>{
+
+    const data = {
+      metodo: "GET",
+      url: `${baseURLv4}/list/${dados.infoListaCustomizada.id}`,
+      header1key:'content-type',
+      header1value: 'application/json;charset=utf-8',
+      header2key: 'authorization',
+      header2value: `bearer ${apiReadAccessToken}`
+    }
+
+    const xhr = new XMLHttpRequest()
+    
+    xhr.open(data.metodo, data.url)
+    xhr.setRequestHeader(data.header1key, data.header1value)
+    xhr.setRequestHeader(data.header2key, data.header2value)
+
+    xhr.addEventListener('load', (e)=>{
+      console.log("Chegou a lista CUSTOMIZADA!\n")
+      const listaCustomizada = JSON.parse(xhr.responseText)
+      console.log(listaCustomizada)
+
+      listacustomizadaInfo = listaCustomizada // Globalmente, novamente
+
+      dados.listaCustomizada = listaCustomizada// Objeto que está sendo passado a frente, acrescentado cada vez mais
+      console.log("Ai está, o objeto 'dados' novamente incrementado...\n")
+      console.log(dados)
+
+      resolve(dados)
+    })
+
+    xhr.addEventListener('error', (e)=>{
+      console.log('Deu um problema na hora de trazer a LISTA CUSTOMIZADA em si...\n')
+      reject(xhr)
+    })
+
+    xhr.send()
+  })
+}
+function InjectItems(dados){ // esta função ficará responsável por gerar as urls(para imagens) e strings, que serão distribuidos ao logo da página.
+  
+}
 /* 
 Rodei apenas uma vez, para conseguir o request token. Agora preciso validar na mão e continuar a usar esse mesmo token.
 Vale dizer que, já guarder o token abaixo numa variavel lá em cima.
@@ -203,10 +301,14 @@ getPass()
     console.log(res)
   })
   */
-/* 
+
 getLists()
+  .then(capturaInfoDeListas)
+  .then(getConfiguration)
+  .then(getListaCustomizadaByID)
+
   .catch( (val)=>{
     console.log("DEU ERRADO... segue o xhr, para debug...\n")
     console.log(val)
   })
- */
+

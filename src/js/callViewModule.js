@@ -10,12 +10,13 @@ import $ from 'jquery'
 
 const $menu_items = $('.nav-link').toArray() // anchors de cada item do menu (apenas os que contem, ou seja, exclui o 'hr').
 
+
 function toggleDisabled(evento){
     $('#navegacao a.disabled').removeClass('disabled')
     $(evento.target).addClass('disabled')
-}
+} 
 
-function requisitaPagina(e) {
+function requisitaPagina_toggleDisable(e) {
     toggleDisabled(e)
 
     return new Promise( (resolve, reject)=>{
@@ -31,9 +32,9 @@ function requisitaPagina(e) {
                 console.log('ja chegou o disco voador...')
                 console.log(info)
                 
-                atribuiClick() //Necessário fazer isso sempre que um novo bloco HTML for recebido, não importa se for antes ou depois de injetar.
-
-                resolve(info)
+                atribuiClick() //Necessário fazer isso sempre que um novo bloco HTML for recebido, depois do 'toggleDisabled'
+                
+                resolve(info,e)
             }
         })
     })
@@ -49,7 +50,7 @@ function atribuiClick(){ // Cria o bind do evento de click, para que chame a fun
     $menu_items.forEach( (elem, i)=>{
         if( !($(elem).hasClass('disabled')) ){
             $(elem).on('click', (e)=>{
-                requisitaPagina(e)
+                requisitaPagina_toggleDisable(e)
                     .then(injetaPagina)
                     .catch( (response)=>{
                         console.log('ENTROU NO CATCH')
