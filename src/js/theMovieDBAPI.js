@@ -49,8 +49,6 @@ let accessToken_accDetails = {
   account_id: '5acd0058c3a3687e4002f7c4'
 }
 
-
-
 // API V3
 const baseURLv3 = 'https://api.themoviedb.org/3'
 let request_tokenv3 
@@ -279,6 +277,7 @@ function getListaCustomizadaByID(dados){
 function InjectItems(dados){ // esta função ficará responsável por gerar as urls(para imagens) e strings, que serão distribuidos ao logo da página.
   
 }
+
 /* 
 Rodei apenas uma vez, para conseguir o request token. Agora preciso validar na mão e continuar a usar esse mesmo token.
 Vale dizer que, já guarder o token abaixo numa variavel lá em cima.

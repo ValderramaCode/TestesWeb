@@ -1,6 +1,16 @@
 @import'./theMovieDB';
 
 $tinta_jogada_na_tela: url('../static/imgs/img_01.jpg');
+$url_backdrop: url('https://image.tmdb.org/t/p/original/a906PH7CDmSOdS7kmnAgdWk5mhv.jpg');
+
+#backdrop-container{
+    background-color: #ececec;
+}
+#introducao{
+    background-color: #ececec;
+    color: #20c997;
+}
+
 
 #desloca{
     margin-top: 56px;
