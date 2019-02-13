@@ -61,5 +61,7 @@ function atribuiClick(){ // Cria o bind do evento de click, para que chame a fun
     console.log($menu_items)
 }
 
+//TODO USAR SPLIT DO ELEMENTO WM-LINK PARA EXECUTAR O PLUGIN DO ARQUIVO 'theMovieDBAPI.js' ESPECIALMENTE PARA CADA ARQUIVO, QUANDO CARREGADO NA PÁGINA. ISTO, NA 'callViewModule.js"
+
 atribuiClick()
 

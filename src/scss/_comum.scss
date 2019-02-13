@@ -1,0 +1,20 @@
+
+$tinta_jogada_na_tela: url('../static/imgs/img_01.jpg');
+$url_backdrop: url('https://image.tmdb.org/t/p/original/a906PH7CDmSOdS7kmnAgdWk5mhv.jpg');
+$cinza-claro: #ececec;
+
+.desloca{ 
+    margin-top: 56px;
+}
+
+#navegacao{
+    opacity: 0.9;
+    #brand{
+        color: $cyan;
+    }
+    button{
+        border: none !important;
+        outline: none !important;
+        color: $light;
+    }
+}
