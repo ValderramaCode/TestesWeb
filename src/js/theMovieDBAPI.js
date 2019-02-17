@@ -41,7 +41,7 @@ import $ from 'jquery'
 */
 
 // API V4.  Usei uma pequena gambiarra para usar sempre o mesmo request token. Mais a baixo explico o por que.
-$.fn.theMovieDBloadElementsPlugin = function () {
+export default function theMovieDBloadElements () {
 
   const baseURLv4 = 'https://api.themoviedb.org/4'
   let request_tokenV4 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE1NDk3NjcwNzcsInNjb3BlcyI6WyJwZW5kaW5nX3JlcXVlc3RfdG9rZW4iXSwiZXhwIjoxNTQ5NzY3OTc3LCJqdGkiOjExODMzMDksImF1ZCI6IjFhYjljMzgzNWI5MDRmODgwYWY3NTYwODYwODUxNGJhIiwicmVkaXJlY3RfdG8iOm51bGwsInZlcnNpb24iOjF9.GfzqFmMX-sXvwuYTAiG2kCR_fM7_2hAN0iA8jWtNK9U'
@@ -277,7 +277,7 @@ $.fn.theMovieDBloadElementsPlugin = function () {
     })
   }
   function InjectItems(dados) { // esta função ficará responsável por gerar as urls(para imagens) e strings, que serão distribuidos ao logo da página.
-
+    
   }
 
   /* 
@@ -313,4 +313,6 @@ $.fn.theMovieDBloadElementsPlugin = function () {
       console.log(val)
     })
 }
+
+
 //TODO TRANSFORMAR EM UM PLUGIN.

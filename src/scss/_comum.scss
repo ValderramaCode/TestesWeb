@@ -17,4 +17,12 @@ $cinza-claro: #ececec;
         outline: none !important;
         color: $light;
     }
+    a{  
+        outline: none;
+        color: $light;
+        transition: 100ms;
+    }
+    a.disabled, a:hover{
+        color: $gray-600;
+    }
 }

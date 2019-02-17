@@ -7,58 +7,83 @@
         - o elemento de
  */
 import $ from 'jquery'
+import tdbInfo from './theMovieDBAPI'
 
+console.log(tdbInfo)
 const $menu_items = $('.nav-link').toArray() // anchors de cada item do menu (apenas os que contem, ou seja, exclui o 'hr').
 
-
-function toggleDisabled(evento){
-    $('#navegacao a.disabled').removeClass('disabled')
-    $(evento.target).addClass('disabled')
-} 
-
-function requisitaPagina_toggleDisable(e) {
-    toggleDisabled(e)
-
+function requisitaPagina(e){
     return new Promise( (resolve, reject)=>{
-        const data = {
-            metodo: "GET",
-            url: $(e.target).attr('wm-url'), 
-        }
         
+        /* const callbacks = []
+        export const chamaCallbacks = (cb) =>{
+            if(!callbacks.includes(cb))
+                callbacks.push(cb)
+        }
+        */
+
         $.ajax({
-            method: data.metodo,
-            url: data.url,
+            method: "GET",
+            url: $(e.target).attr('wm-url'),
             success(info){
                 console.log('ja chegou o disco voador...')
-                console.log(info)
-                
-                atribuiClick() //Necessário fazer isso sempre que um novo bloco HTML for recebido, depois do 'toggleDisabled'
-                
-                resolve(info,e)
+                const dataToPassOn = { // Objeto que contem tanto a RESPOSTA da requisição, quanto o EVENTO do CLICK, no item do menu.
+                    info: info,
+                    eventoDeClick: e,
+                    getTDBfrontData: tdbInfo 
+                }
+                console.log(dataToPassOn)
+                console.log(dataToPassOn.info)
+
+                resolve(dataToPassOn)
+            },
+            error(info){
+                console.log("DEU BOSTA NA REQUISIÇÃO DA PÁGINA")
+                reject(info)
             }
         })
+
     })
 }
+function injetaPagina(dataToPassOn){
+    console.log("-- CHEGOU NO 'injetaPagina' --")
+    console.log(dataToPassOn.info)
+    $('main').html(dataToPassOn.info)
 
-function injetaPagina(paginaHtml_formato_string){
-    console.log('vai injetar a pagina abaixo...\n')
-    console.log(paginaHtml_formato_string)
-    $('main').html(paginaHtml_formato_string)
+    //Chamar a callback herdada
+
+    dataToPassOn.getTDBfrontData()
+
+    return(dataToPassOn)
 }
+function toggleDisabled(dataToPassOn){
+    console.log("-- CHEGOU NO 'toggleDisabled. --")
+
+    $('#navegacao a.disabled').removeClass('disabled')
+    $(dataToPassOn.eventoDeClick.target).addClass('disabled')
+
+    console.log("-- CONSEGUIU RESOLVER O 'dataToPassOn' e está passando adiante --")
+            
+    return(dataToPassOn)
+}    
 
 function atribuiClick(){ // Cria o bind do evento de click, para que chame a função de REQUISITAR a página E de INJETA-LA.
+
     $menu_items.forEach( (elem, i)=>{
-        if( !($(elem).hasClass('disabled')) ){
+        console.log($(elem))
+        if( !($(elem).hasClass('disabled')) || $(elem).attr('wm-url') != "#"){
             $(elem).on('click', (e)=>{
-                requisitaPagina_toggleDisable(e)
+                   requisitaPagina(e)
                     .then(injetaPagina)
-                    .catch( (response)=>{
+                    .then(toggleDisabled)
+                    .then(atribuiClick)
+                    .catch( (problema)=>{
                         console.log('ENTROU NO CATCH')
+                        console.log(problema)
                     })
             })
         }
     })
-    console.log($menu_items)
 }
 
 //TODO USAR SPLIT DO ELEMENTO WM-LINK PARA EXECUTAR O PLUGIN DO ARQUIVO 'theMovieDBAPI.js' ESPECIALMENTE PARA CADA ARQUIVO, QUANDO CARREGADO NA PÁGINA. ISTO, NA 'callViewModule.js"
