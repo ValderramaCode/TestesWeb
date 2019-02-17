@@ -45,18 +45,68 @@ function injetaPagina(dataToPassOn){
         $('main').html(dataToPassOn.info)
 
         //Chamar a callback herdada
+       
+       switch($(dataToPassOn.eventoDeClick.target).attr('wm-url')){   
+        case "theMovieDB.html": 
+            dataToPassOn.getTDBfrontData() // A promise irá mandar ao Resolve o array que contem os objetos com os dados que precisarei de cada filme da lista customizada. Esta Promise vem de outro objeto.
+            .then( (listaCustomizada)=>{    
+                console.log("------ EXECUTOU A PROMISE IMPORTADA ------")
+                console.log(listaCustomizada)
 
-        dataToPassOn.getTDBfrontData() // A promise irá mandar ao Resolve o array que contem os objetos com os dados que precisarei de cada filme da lista customizada. Esta Promise vem de outro objeto.
-         .then( (listaCustomizada)=>{    
-            console.log("------ EXECUTOU A PROMISE IMPORTADA ------")
-            console.log(listaCustomizada)
-            })
-         .then( ()=>{
-            resolve(dataToPassOn)
-            })
-         .catch( (erro)=>{
-             console.log(erro)
-         })  
+                listaCustomizada.forEach( (elem)=>{
+                    const img = $('<img src="" alt="" class="img-fluid">')
+                    img.attr('src', elem.image_url)
+                    img.attr('alt',`${elem.name}-Poster`)
+
+                    const cardTitle = $('<div class="card-title">Comentário</div>')
+                    const cardText = $('<div class="card-text"></div>')
+                    cardText.append(elem.comment)
+                    
+
+
+                    const cardBody = $('<div class="card-body"></div>')
+                    cardBody.append(cardTitle)
+                    cardBody.append(cardText)
+
+
+
+                    const cardBody_col = $('<div class="col-12 col-md-8 col-lg-3"></div>')
+                    cardBody_col.append(cardBody)
+                    
+
+                    const cardPoster_col = $('<div class="col-12 col-md-8 col-lg-3"></div>')
+                    cardPoster_col.append(img)
+                    
+
+
+                    const cardRow = $('<div class="row no-gutters"></div>')
+                    cardRow.append(cardPoster_col)
+                    cardRow.append(cardBody_col)
+                    
+                    const cardHeader = $('<div class="card-header"></div>')
+                    cardHeader.append(elem.name)
+                    
+
+                    const card_wrapper = $('<div class="card shadow-lg m-3 mb-5 text-white bg-dark rounded"></div>')
+                    card_wrapper.append(cardHeader)
+                    card_wrapper.append(cardRow)
+
+                    $('main').append(card_wrapper)
+
+                })
+
+                })
+            .then( ()=>{
+                resolve(dataToPassOn)
+                })
+            .catch( (erro)=>{
+                console.log(erro)
+            }) 
+            
+
+        default: resolve(dataToPassOn)
+    }
+        
         
     })   
 }
