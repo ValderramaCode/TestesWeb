@@ -42,7 +42,8 @@ import $ from 'jquery'
 
 // API V4.  Usei uma pequena gambiarra para usar sempre o mesmo request token. Mais a baixo explico o por que.
 export default function theMovieDBloadElements () {
-
+  return new Promise( (resolve)=>{
+    
   const baseURLv4 = 'https://api.themoviedb.org/4'
   let request_tokenV4 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE1NDk3NjcwNzcsInNjb3BlcyI6WyJwZW5kaW5nX3JlcXVlc3RfdG9rZW4iXSwiZXhwIjoxNTQ5NzY3OTc3LCJqdGkiOjExODMzMDksImF1ZCI6IjFhYjljMzgzNWI5MDRmODgwYWY3NTYwODYwODUxNGJhIiwicmVkaXJlY3RfdG8iOm51bGwsInZlcnNpb24iOjF9.GfzqFmMX-sXvwuYTAiG2kCR_fM7_2hAN0iA8jWtNK9U'
   const apiReadAccessToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxYWI5YzM4MzViOTA0Zjg4MGFmNzU2MDg2MDg1MTRiYSIsInN1YiI6IjVhY2QwMDU4YzNhMzY4N2U0MDAyZjdjNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.l47tyNlpbf5FRmu2O8fvzCkDIFmhnHxlSjYAbhvMR0I'
@@ -63,7 +64,6 @@ export default function theMovieDBloadElements () {
   let listsInfo
   let configurationInfo
   let listacustomizadaInfo
-
 
   //////// Começando, primeiro com a APIv4... utiizarei metodos diferentes, somente por didática. Primeiro, sem utilizar promisse.
 
@@ -203,7 +203,6 @@ export default function theMovieDBloadElements () {
     })
   }
   function getConfiguration(dados) { // Preciso, para montar alugumas urls e de fato resgatar os elementos e adiciona-los na página.
-
     return new Promise((resolve, reject) => {
       const data = {
         metodo: "GET",
@@ -277,8 +276,26 @@ export default function theMovieDBloadElements () {
     })
   }
   function InjectItems(dados) { // esta função ficará responsável por gerar as urls(para imagens) e strings, que serão distribuidos ao logo da página.
+   return new Promise( (resolve)=>{
+    const {infoConfiguracoes: {images: {secure_base_url, poster_sizes:[ , , , chosen_poster_size]}} 
+    , listaCustomizada: {comments, results} } = dados
+
+    const filmes = results.map( (obj)=>{
+      const filme = {
+        name : obj.name? obj.name : obj.title ,
+        image_url : `${secure_base_url}${chosen_poster_size}${obj.poster_path}`,
+        comment: comments[`${obj.media_type}:${obj.id}`]
+      }
+
+      return filme
+    })
+
+    console.log(filmes)
+
+    resolve(filmes)
+   })
     
-  }
+  } 
 
   /* 
   Rodei apenas uma vez, para conseguir o request token. Agora preciso validar na mão e continuar a usar esse mesmo token.
@@ -307,11 +324,24 @@ export default function theMovieDBloadElements () {
     .then(capturaInfoDeListas)
     .then(getConfiguration)
     .then(getListaCustomizadaByID)
-
+    .then(InjectItems)
+    .then( (filmes)=>{
+            resolve(filmes)  
+         })
     .catch((val) => {
       console.log("DEU ERRADO... segue o xhr, para debug...\n")
       console.log(val)
     })
+    
+    /* 
+    Promise.all([getLists, capturaInfoDeListas, getConfiguration, getListaCustomizadaByID, InjectItems])
+    .then( (values)=>{
+      return resolve(values)
+    })
+     */
+
+
+  })   
 }
 
 

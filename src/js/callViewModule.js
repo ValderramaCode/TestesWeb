@@ -15,13 +15,6 @@ const $menu_items = $('.nav-link').toArray() // anchors de cada item do menu (ap
 function requisitaPagina(e){
     return new Promise( (resolve, reject)=>{
         
-        /* const callbacks = []
-        export const chamaCallbacks = (cb) =>{
-            if(!callbacks.includes(cb))
-                callbacks.push(cb)
-        }
-        */
-
         $.ajax({
             method: "GET",
             url: $(e.target).attr('wm-url'),
@@ -46,15 +39,26 @@ function requisitaPagina(e){
     })
 }
 function injetaPagina(dataToPassOn){
-    console.log("-- CHEGOU NO 'injetaPagina' --")
-    console.log(dataToPassOn.info)
-    $('main').html(dataToPassOn.info)
+    return new Promise( (resolve)=>{
+        console.log("-- CHEGOU NO 'injetaPagina' --")
+        console.log(dataToPassOn.info)
+        $('main').html(dataToPassOn.info)
 
-    //Chamar a callback herdada
+        //Chamar a callback herdada
 
-    dataToPassOn.getTDBfrontData()
-
-    return(dataToPassOn)
+        dataToPassOn.getTDBfrontData() // A promise irá mandar ao Resolve o array que contem os objetos com os dados que precisarei de cada filme da lista customizada. Esta Promise vem de outro objeto.
+         .then( (listaCustomizada)=>{    
+            console.log("------ EXECUTOU A PROMISE IMPORTADA ------")
+            console.log(listaCustomizada)
+            })
+         .then( ()=>{
+            resolve(dataToPassOn)
+            })
+         .catch( (erro)=>{
+             console.log(erro)
+         })  
+        
+    })   
 }
 function toggleDisabled(dataToPassOn){
     console.log("-- CHEGOU NO 'toggleDisabled. --")
